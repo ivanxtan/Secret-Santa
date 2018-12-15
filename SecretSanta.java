@@ -1,7 +1,7 @@
 // Ivan Tan
 // December 14, 2018
-
 // Secret Santa
+
 // This program uses the Participant class and allows a user to:
 //    create a list of participants
 //    list all the participants names
@@ -40,7 +40,7 @@ public class SecretSanta {
       
       String choice;
       do {
-         System.out.println("*** MAIN MENU ***");
+         printHighlighted("MAIN MENU");
          System.out.println("(C)reate participants list.");
          System.out.println("(L)ist all participants' names.");
          System.out.println("Create (P)airings for the participants.");
@@ -81,7 +81,6 @@ public class SecretSanta {
       printHighlighted("SECRET SANTA");
       printHighlighted("This program allows you to add the participants of the");
       printHighlighted("game and assign them matches to send and receive gifts.");
-      System.out.println();
    }
    
    // Prompts the user for the number of participants 
@@ -91,6 +90,7 @@ public class SecretSanta {
    // Returns:
    //    list of Participant objects (Participant[])
    public static Participant[] createParticipants(Scanner console) {
+      System.out.println();
       printHighlighted("Enter the number of participants desired");
       int num = promptInt(console);
       while (num <= 0) {
@@ -130,6 +130,8 @@ public class SecretSanta {
    //    Random rand = the random object
    public static void assignRecipients(Participant[] participants, 
          Random rand) {
+      System.out.println();
+      
       boolean allHaveMatches = false;
       while (!allHaveMatches){
          resetMatches(participants);
@@ -214,6 +216,7 @@ public class SecretSanta {
    // Parameters:
    //    Participant[] participants = the desired list of Participant objects
    public static void printAll(Participant[] participants) {
+      System.out.println();
       printHighlighted("MATCHES OF ALL PARTICIPANTS");
       
       if (allHaveMatches(participants)) {
@@ -238,6 +241,7 @@ public class SecretSanta {
    //    Scanner console = console for user input
    //    Participant[] participants = the desired list of Participant objects
    public static void printSpecific(Scanner console, Participant[] participants) {
+      System.out.println();
       printHighlighted("VIEW SPECIFIC RECIPIENT OF A PARTICIPANT");
       
       if (allHaveMatches(participants)) {
@@ -277,6 +281,7 @@ public class SecretSanta {
    //    Scanner console = console for user input
    //    Participant[] participants = the desired list of Participant objects
    public static void scrollAll(Scanner console, Participant[] participants) {
+      System.out.println();
       printHighlighted("VIEW EACH RECIPIENT OF ALL PARTICIPANTS ONE BY ONE");
       
       if (allHaveMatches(participants)) {
@@ -288,8 +293,19 @@ public class SecretSanta {
                   
             System.out.println();
             
-            printHighlighted("Press enter to clear the output or enter Q to " + 
-                  "go back to the main menu");
+            if (i + 1 < participants.length) {
+               printHighlighted("Press enter to see the recipient for the next " + 
+                     "participant: " + participants[i + 1].getName() + " (" + 
+                     (participants.length - i - 1) + 
+                     " left)");
+               printHighlighted("Enter Q to go back to the main menu");
+            } else { // i + 1 >= participants.length
+               printHighlighted(
+                     "There are no more participants.");
+               printHighlighted("Press enter or enter Q to go back to the main menu");
+               System.out.println();
+            }
+            
             String scrollChoice = console.nextLine();
             if (scrollChoice.equalsIgnoreCase("Q")) {
                System.out.println();
@@ -297,16 +313,6 @@ public class SecretSanta {
             }
             
             clearScreen(50);
-            
-            if (i + 1 < participants.length) {
-               printHighlighted("Press enter to see the recipient for the next " + 
-                     "participant: " + participants[i].getRecipientName() + " (" + 
-                     (participants.length - i - 1) + " left)");
-            } else {
-               printHighlighted(
-                     "Press enter or enter Q to go back to the main menu");
-               System.out.println();
-            }
          } 
       } else {
          printHighlighted(

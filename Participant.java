@@ -1,6 +1,5 @@
 // Ivan Tan
 // December 14, 2018
-
 // Secret Santa
 
 // This class represents a participant in the Secret Santa game. 
