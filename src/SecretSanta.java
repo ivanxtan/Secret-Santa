@@ -13,13 +13,14 @@
 //    scroll through each recipient for all participants one by one
 
 import java.util.*;
+import java.io.*;
 
 public class SecretSanta {
    // Represents the threshold multiplier to reset the loop when 
    // an impossible matching scenario occurs
    public static final int RETRY_COUNT_MULTIPLIER = 2;
 
-   public static void main(String[] args) {
+   public static void main(String[] args) throws FileNotFoundException{
       Random rand = new Random();
       Scanner console = new Scanner(System.in);
       
@@ -31,7 +32,7 @@ public class SecretSanta {
       
       // Create n filler participants with format "Participant #x"
       
-      participants = new Participant[1000];
+      participants = new Participant[100];
       for (int i = 0; i < participants.length; i++) {
          participants[i] = new Participant("Participant #" + (i + 1));
       }
@@ -42,12 +43,13 @@ public class SecretSanta {
       do {
          printHighlighted("MAIN MENU");
          System.out.println("(C)reate participants list.");
-         System.out.println("(L)ist all participants' names.");
+         System.out.println("(L)ist the names of all participants.");
          System.out.println("Create (P)airings for the participants.");
          System.out.println("View (A)ll the pairings of participants.");
          System.out.println("View the recipient for (O)ne participant.");
-         System.out.println("(S)croll through each recipient for ALL " + 
+         System.out.println("Scroll through (E)ach recipient for all " + 
                "participants one by one.");
+         System.out.println("(S)ave participants list and their pairings to a file.");
          System.out.println("(Q)uit.");
          
          choice = console.nextLine();
@@ -61,8 +63,10 @@ public class SecretSanta {
             printAll(participants);
          } else if (choice.equalsIgnoreCase("o")) {
             printSpecific(console, participants);
-         } else if (choice.equalsIgnoreCase("s")) {
+         } else if (choice.equalsIgnoreCase("e")) {
             scrollAll(console, participants);
+         } else if (choice.equalsIgnoreCase("s")) {
+            saveAll(console, participants);
          }
          
          System.out.println();
@@ -91,6 +95,8 @@ public class SecretSanta {
    //    list of Participant objects (Participant[])
    public static Participant[] createParticipants(Scanner console) {
       System.out.println();
+      printHighlighted("CREATE PARTICIPANTS LIST");
+      System.out.println();
       printHighlighted("Enter the number of participants desired");
       int num = promptInt(console);
       while (num <= 0) {
@@ -117,8 +123,9 @@ public class SecretSanta {
    // Parameters:
    //    Participant[] participants = the desired list of Participant objects
    public static void listParticipants(Participant[] participants) {
+      System.out.println();
       for (int i = 0; i < participants.length; i++) {
-         System.out.println((i + 1) + ": " + participants[i].getName());
+         System.out.println((i + 1) + ": \"" + participants[i].getName() + "\"");
       }
       
       System.out.println();
@@ -131,26 +138,28 @@ public class SecretSanta {
    public static void assignRecipients(Participant[] participants, 
          Random rand) {
       System.out.println();
+      printHighlighted("ASSIGN RECIPIENTS FOR ALL PARTICIPANTS");
       
       boolean allHaveMatches = false;
       while (!allHaveMatches){
          resetMatches(participants);
          
          for (int i = 0; i < participants.length; i++) {
+            Participant person = participants[i];
             printHighlighted("SEARCH FOR: \"" + 
-                  participants[i].getName().toUpperCase() + 
+                  person.getName().toUpperCase() + 
                   "\"");
                   
             int retryCount = 0; // to avoid infinite loop when an 
-            while (!participants[i].hasRecipient() && 
+            while (!person.hasRecipient() && 
                   retryCount < participants.length * RETRY_COUNT_MULTIPLIER) {
                // random index of Participant in participants array
                int num = rand.nextInt(participants.length);
                
                // NOT itself AND recipient does NOT have gifter/"Santa"
                if (num != i && !participants[num].hasSender()) {
-                  participants[i].setRecipient(participants[num]);
-                  participants[num].setSender(participants[i]);
+                  person.setRecipient(participants[num]);
+                  participants[num].setSender(person);
                   System.out.println("Random participant found.");
                } else if (num == i) { // does not count towards retryCount
                   System.out.println("Random participant was themselves..." + 
@@ -221,11 +230,9 @@ public class SecretSanta {
       
       if (allHaveMatches(participants)) {
          for (Participant person : participants) {
-            System.out.println(person.getName() + 
-                  " will get a gift from " + 
-                  person.getSenderName() + 
-                  " and send a gift to: " + 
-                  person.getRecipientName());
+            System.out.println("\"" + person.getName() + 
+                  "\" will get a gift from \"" + person.getSenderName() + 
+                  "\" and send a gift to \"" + person.getRecipientName() + "\"");
          }
       } else {
          printHighlighted("There are no pairings created for the " + 
@@ -257,9 +264,7 @@ public class SecretSanta {
          System.out.println();
          
          int participantIndex = participantChoice - 1;
-         System.out.println(participants[participantIndex].getName() + 
-               " will send a gift to: " + 
-               participants[participantIndex].getRecipientName());
+         System.out.println("\"" + participants[participantIndex].getName() + "\" will send a gift to \"" + participants[participantIndex].getRecipientName() + "\"");
                
          System.out.println();
          
@@ -286,12 +291,24 @@ public class SecretSanta {
       
       if (allHaveMatches(participants)) {
          for (int i = 0; i < participants.length; i++) {
+            Participant person = participants[i];
             System.out.println();
-            System.out.println(participants[i].getName() + 
-                  " will send a gift to: " + 
-                  participants[i].getRecipientName());
+            System.out.println("\"" + person.getName() + 
+                  "\" will send a gift to \"" + 
+                  person.getRecipientName() + "\"");
                   
             System.out.println();
+            
+            printHighlighted("Press enter to clear the screen or " + 
+                  "enter Q to go back to the main menu");
+            
+            String scrollChoice = console.nextLine();
+            if (scrollChoice.equalsIgnoreCase("Q")) {
+               System.out.println();
+               break;
+            }
+            
+            clearScreen(50);
             
             if (i + 1 < participants.length) {
                printHighlighted("Press enter to see the recipient for the next " + 
@@ -306,7 +323,7 @@ public class SecretSanta {
                System.out.println();
             }
             
-            String scrollChoice = console.nextLine();
+            scrollChoice = console.nextLine();
             if (scrollChoice.equalsIgnoreCase("Q")) {
                System.out.println();
                break;
@@ -342,5 +359,49 @@ public class SecretSanta {
          console.next();
       }
       return num;
+   }
+   
+   // Prompts a user for a desired file and outputs all the participants
+   // names and their pairings to the desired file
+   // Parameters:
+   //    Scanner console = console for user input
+   //    Participant[] participants = the desired list of Participant objects
+   public static void saveAll(Scanner console, Participant[] participants) throws FileNotFoundException {
+      System.out.println();
+      printHighlighted("SAVE ALL PARTICIPANTS NAMES AND THEIR PAIRINGS TO A FILE");
+      
+      if (allHaveMatches(participants)) {
+            printHighlighted("Enter a desired name for the file (without a file extension).");
+            printHighlighted("THIS WILL OVERWRITE ANY EXISTING FILE WITH THE SAME NAME.");
+            
+            File outputFile = promptFile(console);
+            PrintStream fileOutput = new PrintStream(outputFile);
+            
+            for (int i = 0; i < participants.length; i++) {
+               Participant person = participants[i];
+               fileOutput.println((i + 1) + ": \"" + person.getName() + 
+                     "\" will get a gift from \"" + person.getSenderName() + 
+                     "\" (their Secret Santa) and send a gift to \"" + 
+                     person.getRecipientName() + "\"");
+            }
+      } else {
+         printHighlighted(
+               "There are no pairings created for the participants yet.");
+         System.out.println();
+      }
+   }
+   
+   // Prompts the user for a file.
+   // Throws a FileNotFoundException when the file does not exist.
+   // Parameters:
+   //    console = console for user input (Scanner)
+   // Returns:
+   //    the file that the user specified (File)
+   public static File promptFile(Scanner console) 
+         throws FileNotFoundException {
+      String name = console.nextLine();
+      File targetFile = new File(name + ".txt");
+      
+      return targetFile;
    }
 }
