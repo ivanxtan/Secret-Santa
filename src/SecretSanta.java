@@ -290,6 +290,13 @@ public class SecretSanta {
       printHighlighted("VIEW EACH RECIPIENT OF ALL PARTICIPANTS ONE BY ONE");
       
       if (allHaveMatches(participants)) {
+            
+         printHighlighted("Press enter to see the first participant \"" + participants[0].getName() + "\".");
+         
+         String scrollChoice = console.nextLine();
+         
+         clearScreen(50);
+            
          for (int i = 0; i < participants.length; i++) {
             Participant person = participants[i];
             System.out.println();
@@ -302,7 +309,7 @@ public class SecretSanta {
             printHighlighted("Press enter to clear the screen or " + 
                   "enter Q to go back to the main menu");
             
-            String scrollChoice = console.nextLine();
+            scrollChoice = console.nextLine();
             if (scrollChoice.equalsIgnoreCase("Q")) {
                System.out.println();
                break;
