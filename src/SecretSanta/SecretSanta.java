@@ -399,11 +399,12 @@ public class SecretSanta {
             
             for (int i = 0; i < participants.length; i++) {
                Participant person = participants[i];
-               fileOutput.println((i + 1) + ": \"" + person.getName() + 
-                     "\" (\"" + person.getEmail() + "\")" + 
-                     " will get a gift from \"" + person.getSenderName() + 
-                     "\" (their Secret Santa) and send a gift to \"" + 
-                     person.getRecipientName() + "\"");
+               fileOutput.println("Participant #" + (i + 1));
+               fileOutput.println("Name: \"" + person.getName() + "\""); 
+               fileOutput.println("Email: \"" + person.getEmail() + "\"");
+               fileOutput.println("Sender (their Secret Santa): \"" + person.getSenderName() + "\"");
+               fileOutput.println("Recipient: \"" + person.getRecipientName() + "\"");
+               fileOutput.println();
             }
       } else {
          printHighlighted(
