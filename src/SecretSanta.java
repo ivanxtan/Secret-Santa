@@ -4,13 +4,14 @@
 
 // This program uses the Participant class and allows a user to:
 //    create a list of participants
-//    list all the participants names
+//    list all the participants names and emails
 //    create "Secret Santa" pairings 
 //       Each participant is randomly assigned a person to send a gift to. 
 //       There should not be two people sending a gift to the same person.
 //    view all the "Secret Santa" pairings
 //    view the recipient for a specific participant
 //    scroll through each recipient for all participants one by one
+//    save the participants list, their emails, and their pairings to a desired file
 
 import java.util.*;
 import java.io.*;
@@ -30,11 +31,15 @@ public class SecretSanta {
       
       /* 
       
-      // Create n filler participants with format "Participant #x"
+      // Create n filler participants with 
+      //    name = "Participant #x"
+      //    email = "participantx@email.com"
       
       participants = new Participant[100];
       for (int i = 0; i < participants.length; i++) {
-         participants[i] = new Participant("Participant #" + (i + 1));
+         String fillerName = "Participant #" + (i + 1);
+         String fillerEmail = "participant" + (i + 1) + "@email.com";
+         participants[i] = new Participant(fillerName, fillerEmail);
       }
       
       */
@@ -43,13 +48,14 @@ public class SecretSanta {
       do {
          printHighlighted("MAIN MENU");
          System.out.println("(C)reate participants list.");
-         System.out.println("(L)ist the names of all participants.");
+         System.out.println("(L)ist the names and emails of all participants.");
          System.out.println("Create (P)airings for the participants.");
          System.out.println("View (A)ll the pairings of participants.");
          System.out.println("View the recipient for (O)ne participant.");
          System.out.println("Scroll through (E)ach recipient for all " + 
                "participants one by one.");
-         System.out.println("(S)ave participants list and their pairings to a file.");
+         System.out.println("(S)ave participants list, their emails, " + 
+               "and their pairings to a file.");
          System.out.println("(Q)uit.");
          
          choice = console.nextLine();
@@ -112,20 +118,25 @@ public class SecretSanta {
          System.out.println();
          
          printHighlighted("Enter the name for participant #" + (i + 1));
-         participants[i] = new Participant(console.nextLine());
+         String name = console.nextLine();
+         printHighlighted("Enter the email for participant #" + (i + 1) + ": \"" + name + "\"");
+         String email = console.nextLine();
+         participants[i] = new Participant(name, email);
       }
       
       System.out.println();
       return participants;
    }
    
-   // Lists the names of each participant.
+   // Lists the names and emails of each participant.
    // Parameters:
    //    Participant[] participants = the desired list of Participant objects
    public static void listParticipants(Participant[] participants) {
       System.out.println();
+      printHighlighted("LIST NAMES AND EMAILS OF ALL PARTICIPANTS");
       for (int i = 0; i < participants.length; i++) {
-         System.out.println((i + 1) + ": \"" + participants[i].getName() + "\"");
+         Participant person = participants[i];
+         System.out.println((i + 1) + ": \"" + person.getName() + "\" (\"" + person.getEmail() + "\")");
       }
       
       System.out.println();
@@ -147,8 +158,7 @@ public class SecretSanta {
          for (int i = 0; i < participants.length; i++) {
             Participant person = participants[i];
             printHighlighted("SEARCH FOR: \"" + 
-                  person.getName().toUpperCase() + 
-                  "\"");
+                  person.getName().toUpperCase() + "\"");
                   
             int retryCount = 0; // to avoid infinite loop when an 
             while (!person.hasRecipient() && 
@@ -231,6 +241,7 @@ public class SecretSanta {
       if (allHaveMatches(participants)) {
          for (Participant person : participants) {
             System.out.println("\"" + person.getName() + 
+                  " (\"" + person.getEmail() + "\")" + 
                   "\" will get a gift from \"" + person.getSenderName() + 
                   "\" and send a gift to \"" + person.getRecipientName() + "\"");
          }
@@ -264,7 +275,9 @@ public class SecretSanta {
          System.out.println();
          
          int participantIndex = participantChoice - 1;
-         System.out.println("\"" + participants[participantIndex].getName() + "\" will send a gift to \"" + participants[participantIndex].getRecipientName() + "\"");
+         Participant person = participants[participantIndex];
+         System.out.println("\"" + person.getName() + "\" will send a gift to \"" + 
+               person.getRecipientName() + "\"");
                
          System.out.println();
          
@@ -369,13 +382,13 @@ public class SecretSanta {
    }
    
    // Prompts a user for a desired file and outputs all the participants
-   // names and their pairings to the desired file
+   // names, emails, and their pairings to the desired file
    // Parameters:
    //    Scanner console = console for user input
    //    Participant[] participants = the desired list of Participant objects
    public static void saveAll(Scanner console, Participant[] participants) throws FileNotFoundException {
       System.out.println();
-      printHighlighted("SAVE ALL PARTICIPANTS NAMES AND THEIR PAIRINGS TO A FILE");
+      printHighlighted("SAVE ALL PARTICIPANTS NAMES, EMAILS, AND THEIR PAIRINGS TO A FILE");
       
       if (allHaveMatches(participants)) {
             printHighlighted("Enter a desired name for the file (without a file extension).");
@@ -387,7 +400,8 @@ public class SecretSanta {
             for (int i = 0; i < participants.length; i++) {
                Participant person = participants[i];
                fileOutput.println((i + 1) + ": \"" + person.getName() + 
-                     "\" will get a gift from \"" + person.getSenderName() + 
+                     "\" (\"" + person.getEmail() + "\")" + 
+                     " will get a gift from \"" + person.getSenderName() + 
                      "\" (their Secret Santa) and send a gift to \"" + 
                      person.getRecipientName() + "\"");
             }

@@ -11,6 +11,9 @@ public class Participant {
    // Represents the name of the Participant object (String)
    private String name;
    
+   // Represents the email of the Participant object (String)
+   private String email;
+   
    // Represents the recipient/giftee of this particular 
    // Participant object (Participant)
    private Participant recipient;
@@ -21,8 +24,10 @@ public class Participant {
    
    // Constructor method
    //    String name = the desired name for the Participant object
-   public Participant(String name) {
+   //    String email = the desired email for the Participant object
+   public Participant(String name, String email) {
       this.name = name;
+      this.email = email;
    }
    
    // Accessor/Getter method
@@ -31,6 +36,21 @@ public class Participant {
    //    name of the Participant object (String)
    public String getName() {
       return name;
+   }
+   
+   // Accessor/Getter method
+   //    Get the email of the Participant object
+   // Returns:
+   //    email of the Participant object (String)
+   public String getEmail() {
+      return email;
+   }
+   
+   // Checks if the Participant object has an email set
+   // Returns:
+   //    whether or not the email is set (boolean)
+   public boolean hasEmail() {
+      return !email.equals("");
    }
    
    // Checks if the Participant object has the recipient set
