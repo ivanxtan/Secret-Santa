@@ -58,7 +58,7 @@ public class SendEmail {
          
          sendFromGMail(from, pass, to, subject, body);
          
-         System.out.println("Name: \"" + name + "\"" +  " Email: \"" + email + "\"" + " Recipient/Giftee: \"" + recipient + "\"");
+         System.out.println("Name: \"" + name + "\"" +  " Email: \"" + email + "\"");
          System.out.println();
          count++;
       }

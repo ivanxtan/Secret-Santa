@@ -160,7 +160,8 @@ public class SecretSanta {
             printHighlighted("SEARCH FOR: \"" + 
                   person.getName().toUpperCase() + "\"");
                   
-            int retryCount = 0; // to avoid infinite loop when an 
+            // to avoid infinite loop when an impossible matching scenario occurs
+            int retryCount = 0;
             while (!person.hasRecipient() && 
                   retryCount < participants.length * RETRY_COUNT_MULTIPLIER) {
                // random index of Participant in participants array
