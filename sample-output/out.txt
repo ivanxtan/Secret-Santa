@@ -1,0 +1,24 @@
+Participant #1
+Name: "A"
+Email: "A@example.com"
+Sender (their Secret Santa): "D"
+Recipient: "C"
+
+Participant #2
+Name: "B"
+Email: "B@example.com"
+Sender (their Secret Santa): "C"
+Recipient: "D"
+
+Participant #3
+Name: "C"
+Email: "C@example.com"
+Sender (their Secret Santa): "A"
+Recipient: "B"
+
+Participant #4
+Name: "D"
+Email: "D@example.com"
+Sender (their Secret Santa): "B"
+Recipient: "A"
+

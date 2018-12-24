@@ -1,0 +1,15 @@
+// User input is denoted with the "> In: " prefix and an indent before it
+// ----jGRASP exec: java SendEmail
+    Input file name (without a file extension).
+        > In: out
+
+    Name: "A" Email: "A@example.com"
+
+    Name: "B" Email: "B@example.com"
+
+    Name: "C" Email: "C@example.com"
+
+    Name: "D" Email: "D@example.com"
+
+    4 email(s) sent.
+// ----jGRASP: operation complete.
